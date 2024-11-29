@@ -2,7 +2,7 @@
 const jwt = require("jsonwebtoken")
 
 class Auth{
-    static createTokenPair = async ({ payload, publicKey, privateKey }) => {
+    static createTokenPair = async ({ payload, privateKey }) => {
         try{
             const accessToken = jwt.sign( payload, privateKey, {
                 algorithm: "RS256",
@@ -12,15 +12,6 @@ class Auth{
             const refreshToken = jwt.sign( payload, privateKey, {
                 algorithm: "RS256",
                 expiresIn: "7d"
-            })
-
-            // todo
-            jwt.verify(accessToken, publicKey, (err, decoded) => {
-                if(err){
-                    console.log(`err::`, err)
-                }else{
-                    console.log(`decoded::`, decoded)
-                }
             })
 
             return { accessToken, refreshToken }
