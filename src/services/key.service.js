@@ -5,13 +5,12 @@ class KeyService{
 
     static createKey = async ({ shopId, publicKey }) => {
         try {
-            const publicKeyStr = publicKey.toString()
             const token = await keyModel.create({
                 shop: shopId,
-                publicKey: publicKeyStr
+                publicKey: publicKey
             })
 
-            return token ? publicKeyStr : null
+            return token ? publicKey : null
         } catch (error) {
             return error
         }
