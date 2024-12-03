@@ -21,7 +21,7 @@ class Ok extends SuccessResponse {
     }
 } 
 
-class Create extends SuccessResponse{
+class CREATED extends SuccessResponse{
     constructor({message = ReasonPhrases.CREATED, status = StatusCodes.CREATED, metadata}){
         super({message, status, metadata})
     }
@@ -29,7 +29,7 @@ class Create extends SuccessResponse{
 
 module.exports = {
     Ok,
-    Create,
+    CREATED,
     SuccessResponse
 }
 
