@@ -1,8 +1,8 @@
 const shopModel = require("../models/shop.model")
 const bycrypt = require("bcrypt")
 const crypto = require("crypto")
-const keyService = require("./key.service")
-const auth = require("../auth/auth.utils")
+const KeyService = require("./key.service")
+const Auth = require("../auth/auth.utils")
 const Utils = require("../utils")
 const { BadRequestError, AuthFailureError } = require("../core/error.response")
 const ShopService = require("./shop.service")
@@ -14,28 +14,28 @@ const roleShop = {
 
 class AccessService{
 
-    static logout = async ({  }) => {
-        
+    static logout = async ({ key }) => {
+        return await KeyService.removeByShopId(key.shop)
     }
 
     /**
      * 1 - check email
      * 2 - check password
-     * 3 - create PublicKey & PrivateKey 
-     * 4 - generate tokens
+     * 3 - Create PublicKey & PrivateKey & Save PublicKeyeKey 
+     * 4 - Generate AccessToken & RefreshToken
      * 5 - return data
      */
     static login = async ({ email, password, refreshToken = null }) => {
 
-        // 1 - Check Email
+        // 1
         const existsShop = await ShopService.findByEmail({email: email})
         if(!existsShop) throw new BadRequestError("Shop Not Register")
 
-        // 2 - Check Password
+        // 2 
         const match = await bycrypt.compare(password, existsShop.password)
         if(!match) throw new AuthFailureError("Incorrect Password Or Email")
 
-        // 3 - Create PublicKey & PrivateKey & Save PublicKey
+        // 3 
         const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
             modulusLength: 2048,
             publicKeyEncoding: {
@@ -48,8 +48,8 @@ class AccessService{
             }
         })
         
-        // Generate AccessToken & RefreshToken
-        const tokens = await auth.createTokenPair({
+        // 4 
+        const tokens = await Auth.createTokenPair({
             payload: {
                 shopId: existsShop._id,
                 email: email
@@ -58,7 +58,7 @@ class AccessService{
         })
 
           // Create & Save PublicKey To DB
-        const publicKeyStr = await keyService.createKey({
+        const publicKeyStr = await KeyService.createKey({
             shopId: existsShop._id,
             publicKey: publicKey,
             refreshToken: tokens.refreshToken
@@ -68,7 +68,7 @@ class AccessService{
             throw new BadRequestError("Error Generate Public Key")
          }
 
-        // 5 - Return Data
+        // 5
         return {
             shop: Utils.getInfoData({
                 field: ["_id", "name", "email"],
@@ -111,12 +111,12 @@ class AccessService{
             })
 
             // create & save public key to database
-            const publicKeyStr = await keyService.createKey({
+            const publicKeyStr = await KeyService.createKey({
                 shopId: newShop._id,
                 publicKey: publicKey,
             }) 
 
-            const tokens = await auth.createTokenPair({
+            const tokens = await Auth.createTokenPair({
                 payload: {
                     shopId: newShop._id,
                     email: email

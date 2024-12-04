@@ -1,5 +1,6 @@
 "use strict";
 const keyModel = require("../models/key.model")
+const {Types} = require("mongoose")
 
 class KeyService{
 
@@ -15,6 +16,14 @@ class KeyService{
         } catch (error) {
             return error
         }
+    }
+
+    static findByShopId = async (shopId) => {
+        return await keyModel.findOne({ shop: Types.ObjectId.createFromHexString(shopId) }).lean()
+    }
+
+    static removeByShopId = async ( shopId ) => {
+        return await keyModel.deleteOne({ shop: shopId }).lean()
     }
 
 }

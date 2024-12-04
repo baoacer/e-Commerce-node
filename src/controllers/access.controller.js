@@ -1,7 +1,14 @@
-const { CREATED, Ok } = require('../core/success.response')
+const { CREATED, Ok, SuccessResponse } = require('../core/success.response')
 const accessService = require('../services/access.service')
 
 class AccessController{
+
+    logout = async (req, res, next) => {
+        new SuccessResponse({
+            message: "Logout Success!",
+            metadata: await accessService.logout({ key: req.key})
+        }).send(res) 
+    }
 
     signUp = async (req, res, next) => {
         new CREATED({
@@ -12,18 +19,9 @@ class AccessController{
     }
 
     login = async (req, res, next) => {
-        new Ok({
+        new SuccessResponse({
             message: "Login Success!",
-            status: 200,
             metadata: await accessService.login(req.body)
-        }).send(res) 
-    }
-
-    logout = async (req, res, next) => {
-        new Ok({
-            message: "Login Success!",
-            status: 200,
-            metadata: await accessService.logout
         }).send(res) 
     }
 }
