@@ -1,15 +1,15 @@
 "use strict";
 const ApiKeyService = require("../services/apikey.service");
 
-const HEADERS = {
-    "API_KEY": 'x-api-key',
-    "AUTHORIZATION": 'authorization'
+const HEADER = {
+    API_KEY: 'x-api-key',
+    AUTHORIZATION: 'authorization'
 }
 
 class CheckAuth {
     static apiKey = async (req, res, next) => {
         try{
-            const key = req.headers[HEADERS.API_KEY]?.toString()
+            const key = req.headers[HEADER.API_KEY]
             if(!key){
                 return res.status(403).json({
                     message: "Invalid Api Key[1]"
