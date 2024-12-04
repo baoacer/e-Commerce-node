@@ -7,7 +7,8 @@ const COLLECTION_NAME = "Keys";
 const keyTokenSchema = new Schema({
     shop: {type: Schema.Types.ObjectId, required: true, ref: "Shop"},
     publicKey: {type: String, required: true},
-    refreshToken: {type: Array, default: []},
+    refreshTokensUsed: {type: Array, default: []},
+    refreshToken: {type: String, required: true}
 }, {
     timestamps: true,
     collection: COLLECTION_NAME
