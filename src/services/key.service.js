@@ -3,14 +3,15 @@ const keyModel = require("../models/key.model")
 
 class KeyService{
 
-    static createKey = async ({ shopId, publicKey }) => {
+    static createKey = async ({ shopId, publicKey, refreshToken }) => {
         try {
-            const token = await keyModel.create({
-                shop: shopId,
-                publicKey: publicKey
-            })
+            const filter = {shop: shopId}
+            const update = {publicKey: publicKey, refreshTokensUsed: [], refreshToken: refreshToken}
+            const options = {upsert: true, new: true} // neu ton tai thi update nguoc lai thi new
 
-            return token ? publicKey : null
+            const tokens = await keyModel.findOneAndUpdate(filter, update, options).lean()
+
+            return tokens ? tokens.publicKey : null
         } catch (error) {
             return error
         }
