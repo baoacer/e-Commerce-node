@@ -15,6 +15,7 @@ router.use(AuthUtils.authentication)
 // ================== //
 
 router.post("/shop/logout", asyncHandler(accessController.logout))
+router.post("/shop/handlerRefreshToken", asyncHandler(accessController.handlerRefreshToken))
 
 
 
