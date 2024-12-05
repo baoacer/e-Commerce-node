@@ -4,9 +4,10 @@ const asyncHandler = require("../helpers/asyncHandler");
 const { AuthFailureError, NotFoundError } = require("../core/error.response");
 const KeyService = require("../services/key.service");
 
-const HEADERS = {
+const HEADER = {
     API_KEY: 'x-api-key',
     CLIENT_ID: 'x-client-id',
+    REFRESHTOKEN: 'x-rtoken',
     AUTHORIZATION: 'authorization'
 }
 
@@ -38,31 +39,40 @@ class Auth{
     */
     static authentication = asyncHandler(async (req, res, next) => {
         // 1 - Check shopId in header
-        const shopId = req.headers[HEADERS.CLIENT_ID]
+        const shopId = req.headers[HEADER.CLIENT_ID]
         if(!shopId) throw new AuthFailureError("Invalid Request")
 
         //  2 - Check key by shopId
         const key = await KeyService.findByShopId(shopId)
         if(!key) throw new NotFoundError("Not Found Key")
-           
-        //  3 - Check accessToken in header
-        const accessToken = req.headers[HEADERS.AUTHORIZATION]
-        if(!accessToken) throw new AuthFailureError("Invalid Request")
 
-        // 4 - Verify accessToken
+         // 3 - get refreshToken from headers (authorization)
+        if(req.headers[HEADER.REFRESHTOKEN]){
+            try {
+                const refreshToken = req.headers[HEADER.REFRESHTOKEN]
+                req.key = key
+                req.refreshToken = refreshToken
+                return next()
+            } catch (error) {
+                throw error
+            }
+        } 
+
+        const accessToken = req.headers[HEADER.AUTHORIZATION]
+        if(!accessToken) throw new AuthFailureError('Invalid request')
         try {
             const decode = jwt.verify(accessToken, key.publicKey)
-            if(shopId !== decode.shopId) throw new AuthFailureError("Invalid ShopId")     
-            
+            if(shopId !== decode.shopId) throw new AuthFailureError('Invalid userId')
             req.key = key
-
-            // 5 - Return next
             return next()
         } catch (error) {
             throw error
         }
-
     })
+
+    static verifyJWT = async({ token, publicKey }) => {
+        return jwt.verify(token, publicKey)
+    }
 }
 
 module.exports = Auth
