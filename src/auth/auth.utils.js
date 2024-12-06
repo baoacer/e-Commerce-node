@@ -12,7 +12,7 @@ const HEADER = {
 }
 
 class Auth{
-    static createTokenPair = async ({ payload, privateKey }) => {
+    static createTokenPair = async ({ payload, publicKey, privateKey }) => {
         try{
             const accessToken = jwt.sign( payload, privateKey, {
                 algorithm: "RS256",
@@ -24,6 +24,13 @@ class Auth{
                 expiresIn: "7d"
             })
 
+            jwt.verify(accessToken, publicKey, (err, decode) => {
+                if(err){
+                    console.log(`Error Verify:: ${err}`)
+                }else {
+                    console.log(`Decode Verify::${decode}`)
+                }
+            })
             return { accessToken, refreshToken }
         }catch (error) {
             console.log(error)
@@ -66,7 +73,7 @@ class Auth{
             req.key = key
             return next()
         } catch (error) {
-            throw error
+            console.log(error)
         }
     })
 

@@ -103,7 +103,6 @@ class AccessService{
      * 5 - return data
      */
     static login = async ({ email, password, refreshToken = null }) => {
-
         // 1
         const existsShop = await ShopService.findByEmail({email: email})
         if(!existsShop) throw new BadRequestError("Shop Not Register")
@@ -124,13 +123,14 @@ class AccessService{
                 format: "pem"
             }
         })
-        
+
         // 4 
         const tokens = await AuthUtils.createTokenPair({
             payload: {
                 shopId: existsShop._id,
                 email: email
             },
+            publicKey: publicKey,
             privateKey: privateKey
         })
 
