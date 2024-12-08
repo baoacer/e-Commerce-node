@@ -22,7 +22,7 @@ class CheckAuth {
                 return res.status(403).json({
                     message: "Invalid Api Key [2]"
                 })
-            }
+            } 
 
             req.objKey = existsKey
 
