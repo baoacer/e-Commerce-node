@@ -1,13 +1,15 @@
 'use strict'
 const { BadRequestError } = require('../core/error.response');
 const { product, clothing, electronic, furniture } = require('../models/product.model');
+const ProductRepository = require('./repositories/product.repo');
+
 
 class ProductFactory {
 
     static productRegistry = {};
 
-    static registerProductType(productType, productClass){
-        this.productRegistry[productType] = productClass;
+    static registerProductType(type, productClass){
+        ProductFactory.productRegistry[type] = productClass
     }
 
     static async createProduct({ type, payload }){
@@ -15,7 +17,16 @@ class ProductFactory {
         if(!productClass) throw new BadRequestError(`Invalid Product Type::${type}`);
         return new productClass(payload).createProduct();
     }
-}
+
+    // query //
+    static async findAllDraftsForShop({ product_shop, limit = 50, skip = 0 }){
+        return await ProductRepository.findAllDraftsForShop({ 
+            query: { product_shop, isDraft: true },
+            limit: limit,
+            skip: skip
+         })
+    }
+}       
 
 // define base product class
 class Product {
@@ -30,7 +41,7 @@ class Product {
         this.product_quantity = product_quantity;
         this.product_type = product_type;
         this.product_shop = product_shop;
-        this.product_attributes = product_attributes;
+        this.product_attributes = product_attributes; 
     }
 
     // create new product
@@ -87,8 +98,8 @@ class Furniture extends Product{
     }
 }
 
-ProductFactory.registerProductType('Clothing', Clothing);
-ProductFactory.registerProductType('Electronic', Electronic);
-ProductFactory.registerProductType('Furniture', Furniture);
+ProductFactory.registerProductType("Clothing", Clothing);
+ProductFactory.registerProductType("Electronic", Electronic);
+ProductFactory.registerProductType("Furniture", Furniture);
 
-module.exports = ProductFactory;
+module.exports = ProductFactory

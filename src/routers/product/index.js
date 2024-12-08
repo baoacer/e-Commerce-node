@@ -8,5 +8,6 @@ const router = express.Router()
 router.use(AuthUtils.authentication)
 
 router.post('', asyncHandler(ProductController.createProduct))
+router.get('/drafts', asyncHandler(ProductController.getAllDraftsForShop))
 
 module.exports = router
