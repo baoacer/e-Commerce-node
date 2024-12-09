@@ -1,8 +1,7 @@
 "use strict";
 const ApiKeyModel = require('../models/apikey.model')
-const crypto = require('crypto')
 class ApikeyService{
-    static findById = async (key) => {
+    static findByKey = async (key) => {
         const objKey = await ApiKeyModel.findOne({key: key, status: true}).lean();
         return objKey
     }
