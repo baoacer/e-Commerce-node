@@ -15,8 +15,7 @@ class CheckAuth {
                     message: "Invalid Api Key[1]"
                 })
             }
-
-            const existsKey = await ApiKeyService.findById(key)
+            const existsKey = await ApiKeyService.findByKey(key)
 
             if(!existsKey){
                 return res.status(403).json({
