@@ -20,7 +20,7 @@ class KeyService{
     }
 
     static findByShopId = async (shopId) => {
-        return await keyModel.findOne({ shop: new Types.ObjectId(shopId) }).lean()
+        return await keyModel.findOne({ shop: shopId }).lean()
     }
 
     // logout
