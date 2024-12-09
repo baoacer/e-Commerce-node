@@ -18,17 +18,37 @@ class ProductFactory {
         return new productClass(payload).createProduct();
     }
 
+    // put //
+    static async publishProductByShop({ shopId, productId }){
+        return await ProductRepository.publishProductByShop({ shopId, productId })
+    }
+
+    static async unPublishProductByShop({ shopId, productId }){
+        return await ProductRepository.unPublishProductByShop({ shopId, productId })
+    }
+
     // query //
-    static async findAllDraftsForShop({ product_shop, limit = 50, skip = 0 }){
+    static async searchProducts({ keySearch }){
+        return await ProductRepository.searchProductByUser({ keySearch })   
+    }
+
+    static async findAllPublishsForShop({ shopId, limit = 50, skip = 0 }){
+        return await ProductRepository.findAllPublishsForShop({ 
+            query: { product_shop: shopId, isPublished: true },
+            limit: limit,
+            skip: skip
+         })
+    }
+
+    static async findAllDraftsForShop({ shopId, limit = 50, skip = 0 }){
         return await ProductRepository.findAllDraftsForShop({ 
-            query: { product_shop, isDraft: true },
+            query: { product_shop: shopId, isDraft: true },
             limit: limit,
             skip: skip
          })
     }
 }       
 
-// define base product class
 class Product {
     constructor({
         product_name, product_thumb, product_description, product_price,
@@ -50,7 +70,6 @@ class Product {
     }
 }
 
-// define sub-class for diffirent product types clothing
 class Clothing extends Product{
     async createProduct(){
         const newClothing = await clothing.create({
@@ -66,7 +85,6 @@ class Clothing extends Product{
     }
 }
 
-// define sub-class for diffirent product types electronic
 class Electronic extends Product{
     async createProduct(){
         const newElectronic = await electronic.create({
@@ -82,7 +100,6 @@ class Electronic extends Product{
     }
 }
 
-// define sub-class for diffirent product types furniture
 class Furniture extends Product{
     async createProduct(){
         const newFurniture = await furniture.create({

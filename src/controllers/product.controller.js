@@ -23,11 +23,62 @@ class ProductController {
         }).send(res)
     }
 
+    // ============== put ================
+
+    static unPublishProductByShop = async ( req, res, next ) => { 
+        new SuccessResponse({
+            message: "Publish Product Success!",
+            metadata: await ProductFactory.unPublishProductByShop({
+                shopId: req.key.shop,
+                productId: req.params.id
+            })
+        }).send(res)
+    }
+
+    static publishProductByShop = async ( req, res, next ) => { 
+        new SuccessResponse({
+            message: "Publish Product Success!",
+            metadata: await ProductFactory.publishProductByShop({
+                shopId: req.key.shop,
+                productId: req.params.id
+            })
+        }).send(res)
+    }
+
+    // =============== end put ================
+
+
+
     // =============== query ================
+
+    static getListSearchProducts = async ( req, res, next ) => { 
+        new SuccessResponse({
+            message: "Get List Product Search Success!",
+            metadata: await ProductFactory.searchProducts({
+                keySearch: req.params
+            })
+        }).send(res)
+    } 
+
+    /**
+     * @desc Get all publish for shop
+     * @param {String} shopId 
+     * @param {Number} limit 
+     * @param {Number} skip
+     * @returns {JSON} 
+     */
+    static getAllPublishsForShop = async ( req, res, next ) => { 
+        new SuccessResponse({
+            message: "Get List Publish Success!",
+            metadata: await ProductFactory.findAllPublishsForShop({
+                shopId: req.key.shop
+            })
+        }).send(res)
+    } 
 
     /**
      * @desc Get all draft for shop
-     * @param {String} product_shop 
+     * @param {String} shopId 
      * @param {Number} limit 
      * @param {Number} skip
      * @returns {JSON} 
@@ -36,7 +87,7 @@ class ProductController {
         new SuccessResponse({
             message: "Get List Draft Success!",
             metadata: await ProductFactory.findAllDraftsForShop({
-                product_shop: req.key.shop
+                shopId: req.key.shop
             })
         }).send(res)
     }    
