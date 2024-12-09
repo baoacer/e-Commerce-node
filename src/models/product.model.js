@@ -18,7 +18,7 @@ const ProductSchema = new Schema(
     product_type: { type: String, required: true, enum: ["Electronic", "Clothing", "Furniture"] },
     product_shop: { type: Schema.Types.ObjectId, ref: "Shop" },
     product_attributes: { type: Schema.Types.Mixed, required: true },
-    product_ratingsAverage: { type: Number, default: 0.0, 
+    product_ratingsAverage: { type: Number, default: 4.5, 
       min: [1, 'Rating must be above 1.0'],
       max: [5, 'Rating must be below 5.0'],
       set: (val) => Math.round(val * 10) / 10  //set: biến đổi value trước khi save to db
@@ -27,10 +27,7 @@ const ProductSchema = new Schema(
     isDraft: { type: Boolean, default: true, index: true, select: false },
     isPublished: { type: Boolean, default: false, index: true, select: false },
   },
-  {
-    timestamps: true,
-    collection: COLLECTION_NAME,
-  }
+  { timestamps: true, collection: COLLECTION_NAME }
 );
 
 /* Create 'index' for 'search' */
@@ -46,7 +43,6 @@ ProductSchema.pre("save", function (next) {
   next();
 });
 
-// define the product type = clothing
 const clothingSchema = new Schema(
   {
     brand: { type: String, required: true },
@@ -54,13 +50,9 @@ const clothingSchema = new Schema(
     material: String,
     product_shop: { type: Schema.Types.ObjectId, ref: "Shop" }
   },
-  {
-    collection: "Clothes",
-    timestamps: true,
-  }
+  { collection: "Clothes", timestamps: true }
 );
 
-// define the product type = electronic
 const electronicSchema = new Schema(
   {
     manufacturer: { type: String, required: true },
@@ -68,13 +60,9 @@ const electronicSchema = new Schema(
     color: String,
     product_shop: { type: Schema.Types.ObjectId, ref: "Shop" }
   },
-  {
-    collection: "Electronics",
-    timestamps: true,
-  }
+  { collection: "Electronics", timestamps: true }
 );
 
-// define the product type = furniture
 const furnitureSchema = new Schema(
   {
     brand: { type: String, required: true },
@@ -82,13 +70,9 @@ const furnitureSchema = new Schema(
     material: String,
     product_shop: { type: Schema.Types.ObjectId, ref: "Shop" }
   },
-  {
-    collection: "Furnitures",
-    timestamps: true,
-  }
+  { collection: "Furnitures", timestamps: true }
 );
 
-//Export the model
 module.exports = {
   product: model(DOCUMENT_NAME, ProductSchema),
   clothing: model("Clothing", clothingSchema),
