@@ -51,11 +51,27 @@ class ProductController {
 
     // =============== query ================
 
+    static getProduct = async ( req, res, next ) => { 
+        new SuccessResponse({
+            message: "Get Product Success!",
+            metadata: await ProductFactory.findProduct({
+                productId: req.params.productId
+            })
+        }).send(res)
+    } 
+
+    static getAllProducts = async ( req, res, next ) => { 
+        new SuccessResponse({
+            message: "Get All Product Success!",
+            metadata: await ProductFactory.findAllProducts( req.params )
+        }).send(res)
+    } 
+
     static getListSearchProducts = async ( req, res, next ) => { 
         new SuccessResponse({
             message: "Get List Product Search Success!",
             metadata: await ProductFactory.searchProducts({
-                keySearch: req.params
+                keySearch: req.params.keySearch
             })
         }).send(res)
     } 

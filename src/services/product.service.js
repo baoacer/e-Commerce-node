@@ -28,7 +28,32 @@ class ProductFactory {
     }
 
     // query //
-    static async searchProducts({ keySearch }){
+
+    static async findProduct({ productId }){
+        return await ProductRepository.findProduct({ 
+            productId: productId,
+            unSelect: ['__v', 'isPublished', 'isDraft', 'createdAt', 'updatedAt']
+        })   
+    }
+
+    static async findAllProducts({
+        filter = { isPublished: true },
+        limit = 50, page = 1, sort = 'ctime', select = {}
+     }){
+        return await ProductRepository.findAllProducts({ 
+            filter: filter,
+            limit: limit,
+            page: page,
+            sort: sort,
+            select: select = ['product_name', 'product_thumb', 'product_price']
+        })   
+    }
+
+    static async searchProducts({ keySearch }) {
+        return await ProductRepository.searchProductByUser({ keySearch })   
+    }   
+
+    static async searchProducts({ keySearch }) {
         return await ProductRepository.searchProductByUser({ keySearch })   
     }
 

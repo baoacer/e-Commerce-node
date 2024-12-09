@@ -1,6 +1,5 @@
 "use strict";
 
-const { type } = require("express/lib/response");
 const { model, Schema } = require("mongoose");
 const { default: slugify } = require("slugify");
 

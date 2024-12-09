@@ -1,12 +1,35 @@
 'use strict'
 
 const { product } = require('../../models/product.model')
+const Utils = require('../../utils/index')
 
 class ProductRepository {
+
+    static findProduct = async ({ productId, unSelect }) => {
+        return await product.findById( productId )
+        .select(Utils.unGetSelectData(unSelect))
+        .lean()
+        .exec()
+    }
+
+    static findAllProducts = async ({ filter, limit, page, sort, select }) => {
+        const skip = (page - 1) * limit
+        const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
+        const products = await product.find(filter)
+        .sort(sortBy)
+        .skip(skip)
+        .limit(limit)   
+        .select(Utils.getSelectData(select))
+        .lean()
+        .exec()
+
+        return products
+    }
 
     static searchProductByUser = async ({ keySearch }) => {
         const regexSearch = new RegExp(keySearch)
         const results = await product.find({
+            isPublished: true,
             $text: { $search: regexSearch }
         }, 
         { score: { $meta: "textScore" }})
