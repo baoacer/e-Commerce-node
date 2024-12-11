@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "kill-port 3056 && cross-env NODE_ENV=dev nodemon server.js",
-    "prod": "kill-port 3056 && cross-env NODE_ENV=pro nodemon server.js"
+    "dev": "NODE_ENV=dev node --watch server.js",
+    "prod": "NODE_ENV=pro node --watch server.js"
   },
   "keywords": [],
   "author": "",

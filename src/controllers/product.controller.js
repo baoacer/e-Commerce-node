@@ -25,12 +25,23 @@ class ProductController {
 
     // ============== put ================
 
+    static updateProduct = async ( req, res, next ) => { 
+        new SuccessResponse({
+            message: "Update Product Success!",
+            metadata: await ProductFactory.updateProduct( 
+                req.params.productId, req.body.product_type, {
+                ...req.body,
+                product_shop: req.key.shop
+            })
+        }).send(res)
+    }
+
     static unPublishProductByShop = async ( req, res, next ) => { 
         new SuccessResponse({
             message: "Publish Product Success!",
             metadata: await ProductFactory.unPublishProductByShop({
                 shopId: req.key.shop,
-                productId: req.params.id
+                productId: req.params.productId
             })
         }).send(res)
     }
@@ -40,7 +51,7 @@ class ProductController {
             message: "Publish Product Success!",
             metadata: await ProductFactory.publishProductByShop({
                 shopId: req.key.shop,
-                productId: req.params.id
+                productId: req.params.productId
             })
         }).send(res)
     }

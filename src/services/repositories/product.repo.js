@@ -5,6 +5,11 @@ const Utils = require('../../utils/index')
 
 class ProductRepository {
 
+    static updateProductById = async ({ productId, payload, model, isNew = true }) => {
+        const updateProduct = await model.findByIdAndUpdate(productId, payload, { new: isNew })
+        return updateProduct
+    }
+
     static findProduct = async ({ productId, unSelect }) => {
         return await product.findById( productId )
         .select(Utils.unGetSelectData(unSelect))
