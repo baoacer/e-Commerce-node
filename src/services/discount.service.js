@@ -159,6 +159,7 @@ class DiscountService{
     static async getDiscountAmount({
         code, userId, shopId, products
     }){
+        // check discount exists
         const foundDiscount = await DiscountRepository.checkDiscountExists({
             discount_code: code,
             discount_shop_id: Utils.convertObjectId(shopId)
@@ -166,24 +167,16 @@ class DiscountService{
 
         if(!foundDiscount) throw new NotFoundError("Discount Code Not Exists")
 
-        const {
-            discount_is_active,
-            discount_total_use_limit,
-            discount_start_time,
-            discount_end_time,
-            discount_min_order_value,
-            discount_user_use_limit,
-            discount_used_count,
-            discount_user_used,
-            discount_type,
-            discount_code_value
+        const { discount_is_active, discount_total_use_limit, discount_start_time,
+            discount_end_time, discount_min_order_value, discount_user_use_limit,
+            discount_user_used, discount_type, discount_code_value
         } = foundDiscount
 
         if(!discount_is_active) throw new BadRequestError("Discount Code Has Expired")
         if(discount_total_use_limit <= 0) throw new BadRequestError("Discount are out")
-
         if(new Date(discount_start_time) < new Date() || new Date(discount_end_time) < new Date(discount_start_time)) throw new BadRequestError("Discount Code Has Expired")
         
+        // check order value
         let totalOrder = 0
         if(discount_min_order_value > 0){
             totalOrder = products.reduce((total, product) => {
@@ -195,6 +188,7 @@ class DiscountService{
             }
         }
 
+        // check user used
         if(discount_user_use_limit > 0){
             const userUseDiscount = discount_user_used.find(user => user === userId)
             if(userUseDiscount) throw new BadRequestError("You Have Already Used This Discount Code")
@@ -215,6 +209,7 @@ class DiscountService{
             )                
         } 
 
+        // get amount
         const amount = discount_type === 'fixed' ? discount_code_value : totalOrder *  (discount_code_value / 100)
 
         return {
