@@ -1,9 +1,14 @@
 'use strict'
 
 const _ = require('lodash')
-const mongoose = require('mongoose')
+const { Types } = require('mongoose')
 
 class Utils {
+
+    static convertObjectId = (id) => {
+        return new Types.ObjectId(id)
+    }
+
     static getInfoData = ({ field = [], object = {} }) => {
         return _.pick(object, field)
     }
@@ -32,8 +37,9 @@ class Utils {
     
     static updateNestedObjectParser = obj => {
         const final = {}
+        const array = ['product_shop', 'discount_shop_id']
         Object.keys(obj).forEach(k => {
-            if(typeof obj[k] === 'object' && !Array.isArray() && k !== 'product_shop'){
+            if(typeof obj[k] === 'object' && !Array.isArray() && !array.includes(k)){
                 const response = this.updateNestedObjectParser(obj[k])
                 Object.keys(response).forEach( a => {
                     final[`${k}.${a}`] = response[a]
