@@ -10,11 +10,22 @@ class ProductRepository {
         return updateProduct
     }
 
-    static findProduct = async ({ productId, unSelect }) => {
+    static findProductUnSelect = async ({ productId, unSelect }) => {
         return await product.findById( productId )
         .select(Utils.unGetSelectData(unSelect))
         .lean()
         .exec()
+    }
+
+    static findProductSelect = async ({ productId, select }) => {
+        return await product.findById( productId )
+        .select(Utils.getSelectData(select))
+        .lean()
+        .exec()
+    }
+
+    static findProductById = async ( productId ) => {
+        return await product.findOne({ _id: Utils.convertObjectId(productId) }).lean()
     }
 
     static findAllProducts = async ({ filter, limit, page, sort, select }) => {

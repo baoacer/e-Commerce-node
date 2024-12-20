@@ -54,7 +54,7 @@ class ProductFactory {
             limit: limit,
             page: page,
             sort: sort,
-            select: select = ['product_name', 'product_thumb', 'product_price']
+            select: select = ['product_name', 'product_thumb', 'product_price', 'product_shop']
         })   
     }
 
