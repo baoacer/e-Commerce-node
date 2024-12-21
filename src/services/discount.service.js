@@ -161,7 +161,7 @@ class DiscountService{
     }){
         // check discount exists
         const foundDiscount = await DiscountRepository.checkDiscountExists({
-            discount_code: code,
+            discount_code: code, 
             discount_shop_id: Utils.convertObjectId(shopId)
         })
 
@@ -174,7 +174,8 @@ class DiscountService{
 
         if(!discount_is_active) throw new BadRequestError("Discount Code Has Expired")
         if(discount_total_use_limit <= 0) throw new BadRequestError("Discount are out")
-        if(new Date(discount_start_time) < new Date() || new Date(discount_end_time) < new Date(discount_start_time)) throw new BadRequestError("Discount Code Has Expired")
+        if(new Date(discount_start_time) > new Date()) throw new BadRequestError("Discount Code Has Expired")
+        if( new Date(discount_end_time) < new Date()) throw new BadRequestError("Discount Code Has Expired")
         
         // check order value
         let totalOrder = 0

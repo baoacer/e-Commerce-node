@@ -3,6 +3,10 @@ const Utils = require("../../utils")
 
 class CartRepository {
 
+    static async findCartById({ cartId }){
+        return Cart.findOne({ _id: Utils.convertObjectId(cartId), cart_state: 'active'}).lean()
+    }
+
     static async findListUserCart({ userId }){
         return Cart.findOne({ cart_user_id: userId }).lean()
     }

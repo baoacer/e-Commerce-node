@@ -1,9 +1,23 @@
 'use strict'
 
+const { findById } = require('../../models/cart.model')
 const { product } = require('../../models/product.model')
 const Utils = require('../../utils/index')
 
 class ProductRepository {
+
+    static checkProductByServer = async ( products ) => {
+        return await Promise.all( products.map( async product => {
+            const foundProduct = await this.findProductById(product.product_id)
+            if(foundProduct){
+                return {
+                    product_price: foundProduct.product_price,
+                    product_quantity: product.product_quantity,
+                    product_id: foundProduct._id
+                }
+            }
+        }))
+    }
 
     static updateProductById = async ({ productId, payload, model, isNew = true }) => {
         const updateProduct = await model.findByIdAndUpdate(productId, payload, { new: isNew })
