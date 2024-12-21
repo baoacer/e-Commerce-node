@@ -70,7 +70,7 @@ class CartService{
       ]
      */
     static async addToCartV2({ user_id, shop_order_ids }){
-        const { _id, product_quantity, old_quantity } = shop_order_ids[0]?.cart_products[0]
+        const { _id, product_quantity, old_quantity } = shop_order_ids[0]?.item_products[0]
 
         // check exists
         const foundProduct = await ProductRepository.findProductById(_id)
