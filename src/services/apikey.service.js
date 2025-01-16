@@ -5,6 +5,11 @@ class ApikeyService{
         const objKey = await ApiKeyModel.findOne({key: key, status: true}).lean();
         return objKey
     }
+
+    static createKey = async (data) => {
+        const objKey = await ApiKeyModel.create(data)
+        return objKey
+    }
 }
 
 module.exports = ApikeyService

@@ -7,11 +7,25 @@ class CommentController {
 
     static createComment = async ( req, res, next ) => {
         new SuccessResponse({
-            message: "Checkout Success!",
-            metadata: await commentService.create
+            message: "Create Comment Success!",
+            metadata: await commentService.createComment(req.body)
+        }).send(res)
+    }
+
+    static getComments = async ( req, res, next ) => {
+        new SuccessResponse({
+            message: "Get Comments Success!",
+            metadata: await commentService.getCommentsByParentId(req.query)
+        }).send(res)
+    }
+
+    static deleteComment = async ( req, res, next ) => {
+        new SuccessResponse({
+            message: "Delete Comments Success!",
+            metadata: await commentService.deleteComment(req.query)
         }).send(res)
     }
    
 }
 
-module.exports = CheckoutController
+module.exports = CommentController

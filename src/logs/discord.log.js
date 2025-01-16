@@ -25,7 +25,6 @@ class LoggerService {
 
         this.client.login(DISCORD_TOKEN).catch((error) => {
             console.error('Failed to log in:', error)
-            console.log(DISCORD_TOKEN)
         })
     }
 

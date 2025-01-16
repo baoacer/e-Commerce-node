@@ -7,7 +7,7 @@ class InventoryRepository {
         return await Inventory.create({
             inven_product_id: productId,
             inven_location: location,
-            inven_quantity: quantity,
+            inven_stock: quantity,
             inven_shop_id: shopId
         })
     }
