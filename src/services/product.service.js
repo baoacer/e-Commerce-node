@@ -4,6 +4,9 @@ const { product, clothing, electronic, furniture } = require('../models/product.
 const Utils = require('../utils');
 const InventoryRepository = require('./repositories/inventory.repo');
 const ProductRepository = require('./repositories/product.repo');
+const NotificationService = require('./notification.service');
+const { ORDER_01, ORDER_02, PROMOTION_01, SHOP_01 } = require('../utils/contants');
+
 
 
 class ProductFactory {
@@ -107,6 +110,20 @@ class Product {
                 shopId: this.product_shop,
                 quantity: this.product_quantity
             })
+
+            // push notification to system collection
+            // microservice
+            // promise -> not stop the process
+            NotificationService.pushNotiToSystem({
+                type: SHOP_01,
+                senderId: this.product_shop,
+                recieverId: 1,
+                options: { 
+                    product_name: this.product_name,
+                    shop_id: this.product_shop
+                }
+            }).then(rs => {console.log(rs)})
+            .catch(err => {console.log(err)})
         }
         return newProduct
     }
