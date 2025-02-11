@@ -24,6 +24,35 @@ class NotificationService{
             noti_options: options
         })
     }
+
+    static async listNotiByUser({
+        userId = 1,
+        type = 'ALL',
+        isRead = 0
+    }){
+        const match = { noti_receiverId: userId }
+
+        if(type !== 'ALL'){
+            match['noti_type'] = type
+        }
+
+        // aggregate : step prosess data 
+        return await NOTI.aggregate([
+            { // filter 
+                $match: match
+            },
+            { // select field 
+                $project: {
+                    noti_type: 1,
+                    noti_senderId: 1,
+                    noti_receiverId: 1,
+                    noti_content: 1,
+                    noti_options: 1,
+                    createAt: 1
+                }
+            }
+        ])
+    }
 }
 
 module.exports = NotificationService;
