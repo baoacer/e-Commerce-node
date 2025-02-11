@@ -9,6 +9,7 @@ router.use(pushToLogDiscord)
 router.use(CheckAuth.apiKey)
 // router.use(CheckAuth.permission("0"))
 
+router.use('/v1/api/notification', require('./notifications/index'))
 router.use('/v1/api/comment', require('./comment/index'))
 router.use('/v1/api/inventory', require('./inventory/index'))
 router.use('/v1/api/checkout', require('./checkout/index'))
