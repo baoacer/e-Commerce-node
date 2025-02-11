@@ -4,13 +4,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch server.js ",
-    "prod": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "prod": "node --watch server.js",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "amqplib": "^0.10.5",
     "bcrypt": "^5.1.1",
@@ -33,5 +33,14 @@
     "kill-port": "^2.0.1",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.7"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baoacer/e-Commerce-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/baoacer/e-Commerce-node/issues"
+  },
+  "homepage": "https://github.com/baoacer/e-Commerce-node#readme",
+  "description": ""
 }
