@@ -2,8 +2,11 @@
 
 const _ = require('lodash')
 const { Types } = require('mongoose')
+const crypto = require('crypto')
 
 class Utils {
+
+    static randomName = () => crypto.randomBytes(16).toString('hex')
 
     static convertObjectId = (id) => {
         return new Types.ObjectId(id)
