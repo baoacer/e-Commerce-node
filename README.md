@@ -10,6 +10,8 @@ Dự án eCommerce RESTful API được xây dựng bằng Node.js, sử dụng 
 - **JWT (JSON Web Token)** – Xác thực và phân quyền
 - **Discord Webhook** – Gửi log và cảnh báo đến Discord
 - **dotenv** – Quản lý biến môi trường
+- **Cloudinary** - Upload Image
+- **AWS-S3** - Quản lý, lưu trữ Images
 
 ---
 
@@ -48,7 +50,20 @@ cd e-Commerce-node
 npm install
 ```
 
-### 3. Tạo file .env
+### 3. Tạo Discord Bot (tutorial)
+### 4. Đăng ký Cloudinary - upload ảnh
+### 5. Đăng ký aws 
+
+### 6. Chạy RabbitMQ + MongoDB (Docker)
+```bash
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+docker run --name shopDEV -p 27017:27017 -d mongo:latest
+docker run -d --name redis-server -p 6379:6379 redis:latest
+```
+🐰 RabbitMQ Management UI có thể truy cập tại http://localhost:15672
+Mặc định user: guest / pass: guest
+
+### 7. Tạo file .env
 ```env
 # Database
 DEV_APP_PORT=3055
@@ -61,29 +76,33 @@ PRO_DB_PORT=27017
 PRO_DB_NAME="shopPRO"
 
 # Discord
-DISCORD_TOKEN=MTMyMzQ1MDA0NTYwOTAyMTUxMg.GiZMT1.q38yN5y-AjK8kxFcaZGq3xdsuxMTLCwTqgKkLk
-CHANNEL_DISCORD_ID=1323454892655771661
+DISCORD_TOKEN=<your token>
+CHANNEL_DISCORD_ID=<your discord id>
 
 # API - key
-API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwMzE4NDk0NiwiZXhwIjoxNzAzMjcxMzQ2fQ.uYP3EnI3EeX7oXYAvdKrPUl4qCcfDgtFYknUZgSGuOY
+API_KEY=
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=<your cloudinary name>
+CLOUDINARY_API_KEY=<your cloudinary api key >
+CLOUDINARY_API_SECRET=<your cloudinary secret key>
+CLOUDINARY_CLOUDINARY_URL=<your cloudinary url>
+
+# AWS S3
+AWS_BUCKET_NAME=<your aws bucket name>
+AWS_BUCKET_ACCESS_KEY=<your aws users access key>
+AWS_BUCKET_SECRET_KEY=<your users secret key>
+AWS_BUCKET_REGION=<your bucket region>
 ```
 
-### 4. Chạy RabbitMQ + MongoDB (Docker)
-```bash
-docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-docker run --name shopDEV -p 27017:27017 -d mongo:latest
-```
-🐰 RabbitMQ Management UI có thể truy cập tại http://localhost:15672
-Mặc định user: guest / pass: guest
-
-### 5. Chạy server
+### 8. Chạy server
 ```
 npm run dev
 ```
 
 
 ## 📌 Ghi chú
-Đảm bảo MongoDB và RabbitMQ đang chạy trước khi khởi động server
+Đảm bảo MongoDB, RabbitMQ và Redis đang chạy trước khi khởi động server
 Discord Webhook cần được tạo trước, thêm vào biến môi trường để ghi log
 JWT được sử dụng trong Authorization header dưới dạng `authorization` & API KEY `x-api-key`
 USER-ID được truyền qua header `x-client-id`
