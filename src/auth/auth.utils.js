@@ -24,13 +24,14 @@ class Auth{
                 expiresIn: "7d"
             })
 
-            jwt.verify(accessToken, publicKey, (err, decode) => {
-                if(err){
-                    console.log(`Error Verify:: ${err}`)
-                }else {
-                    console.log(`Decode Verify::${decode}`)
-                }
-            })
+            // jwt.verify(accessToken, publicKey, (err, decode) => {
+            //     if(err){
+            //         console.log(`Error Verify:: ${err}`)
+            //     }else {
+            //         console.log(`Decode Verify::${decode}`)
+            //     }
+            // })
+
             return { accessToken, refreshToken }
         }catch (error) {
             console.log(error)
@@ -46,11 +47,11 @@ class Auth{
     */
     static authentication = asyncHandler(async (req, res, next) => {
         // 1 - Check shopId in header
-        const shopId = req.headers[HEADER.CLIENT_ID]
-        if(!shopId) throw new AuthFailureError("Invalid Request")
+        const userId = req.headers[HEADER.CLIENT_ID]
+        if(!userId) throw new AuthFailureError("Invalid Request")
 
         //  2 - Check key by shopId
-        const key = await KeyService.findByShopId(shopId)
+        const key = await KeyService.findByUserId(userId)
         if(!key) throw new NotFoundError("Not Found Key")
 
          // 3 - get refreshToken from headers (authorization)
@@ -69,7 +70,7 @@ class Auth{
         if(!accessToken) throw new AuthFailureError('Invalid request')
         try {
             const decode = jwt.verify(accessToken, key.publicKey)
-            if(shopId !== decode.shopId) throw new AuthFailureError('Invalid userId')
+            if(userId !== decode.userId) throw new AuthFailureError('Invalid userId')
             req.key = key
             return next()
         } catch (error) {

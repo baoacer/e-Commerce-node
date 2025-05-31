@@ -1,17 +1,16 @@
 "use strict";
 const keyModel = require("../models/key.model")
-const {Types} = require("mongoose")
 
 class KeyService{
 
-    static createKey = async ({ shopId, publicKey, refreshToken }) => {
+    static createKey = async ({ userId, publicKey, refreshToken }) => {
         try {
-            const filter = {shop: shopId}
-            // const update = {publicKey: publicKey, refreshTokensUsed: [], refreshToken: refreshToken}
+            const filter = { user: userId }
             const update = {publicKey: publicKey, refreshToken: refreshToken}
-            const options = {upsert: true, new: true} // neu ton tai thi update nguoc lai thi new
-
+            const options = {upsert: true, new: true} 
             const tokens = await keyModel.findOneAndUpdate(filter, update, options).lean()
+
+            console.log(tokens)
 
             return tokens ? tokens.publicKey : null
         } catch (error) {
@@ -19,13 +18,13 @@ class KeyService{
         }
     }
 
-    static findByShopId = async (shopId) => {
-        return await keyModel.findOne({ shop: shopId }).lean()
+    static findByUserId = async (userId) => {
+        return await keyModel.findOne({ user: userId }).lean()
     }
 
     // logout
-    static removeByShopId = async ( shopId ) => {
-        return await keyModel.deleteOne({ shop: shopId }).lean()
+    static removeByShopId = async ( userId ) => {
+        return await keyModel.deleteOne({ user: userId }).lean()
     }
 
     static findByRefreshTokenUsed = async (refreshToken) => {
@@ -33,8 +32,8 @@ class KeyService{
     }
 
     // handler refresh token
-    static deleteKeyByShopId = async (shopId) => {
-        return await keyModel.deleteOne({ shop: shopId }).lean()
+    static deleteKeyByShopId = async (userId) => {
+        return await keyModel.deleteOne({ user: userId }).lean()
     }
 
     static findByRefreshToken = async (refreshToken) => {

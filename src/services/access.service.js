@@ -6,6 +6,7 @@ const AuthUtils = require("../auth/auth.utils")
 const Utils = require("../utils")
 const { BadRequestError, AuthFailureError, FobiddenError } = require("../core/error.response")
 const ShopService = require("./shop.service")
+const { SHOP, ROLE } = require('../configs/contants')
 
 const roleShop = {
     SHOP: "shop",
@@ -127,16 +128,15 @@ class AccessService{
         // 4 
         const tokens = await AuthUtils.createTokenPair({
             payload: {
-                shopId: existsShop._id,
+                userId: existsShop._id,
                 email: email
             },
-            publicKey: publicKey,
             privateKey: privateKey
         })
 
           // Create & Save PublicKey To DB
         const publicKeyDbs = await KeyService.createKey({
-            shopId: existsShop._id,
+            userId: existsShop._id,
             publicKey: publicKey,
             refreshToken: tokens.refreshToken
         }) 
@@ -171,7 +171,7 @@ class AccessService{
             name: name,
             email: email,
             password: passwordHash,
-            roles: [roleShop.SHOP],
+            roles: [ROLE.SHOP],
         })
 
         if(newShop){
@@ -189,13 +189,13 @@ class AccessService{
 
             // create & save public key to database
             const publicKeyDbs = await KeyService.createKey({
-                shopId: newShop._id,
-                publicKey: publicKey,
+                userId: newShop._id,
+                publicKey: publicKey
             }) 
 
             const tokens = await AuthUtils.createTokenPair({
                 payload: {
-                    shopId: newShop._id,
+                    userId: newShop._id,
                     email: email
                 },
                 privateKey: privateKey

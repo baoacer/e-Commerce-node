@@ -5,12 +5,14 @@ const { htmlEmailToken } = require('../utils/tem.html')
 class TemplateService {
     static async newTemplate({
         tem_name = null,
+        tem_id = 0,
         tem_html = null
     }){
         return await TEMPLATE.create({
+            tem_id,
             tem_name, // unique
             tem_html: htmlEmailToken()
-        }).lean()
+        })
     }
 
     static async getTemplate({

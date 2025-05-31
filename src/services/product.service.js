@@ -15,7 +15,7 @@ const {
   ORDER_02,
   PROMOTION_01,
   SHOP_01,
-} = require("../utils/contants");
+} = require("../configs/contants");
 
 class ProductFactory {
   static productRegistry = {};

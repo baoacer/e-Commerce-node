@@ -1,4 +1,4 @@
-const { ORDER_01, ORDER_02, PROMOTION_01, SHOP_01 } = require('../utils/contants');
+const { ORDER_01, ORDER_02, PROMOTION_01, SHOP_01 } = require('../configs/contants');
 const { NOTI } = require('../models/notification.model');
 
 class NotificationService{

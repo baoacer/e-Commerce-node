@@ -1,13 +1,10 @@
 'use strict'
 
 const redis = require('redis')
-const { promisify } = require('util')
 const InventoryRepository = require('./repositories/inventory.repo')
-const redisClient = redis.createClient() // connect redis server
 
-// promisify : chuyen doi callback thanh promise (async/await)
-const pexpire = promisify(redisClient.PEXPIRE).bind(redisClient)
-const setnxAsync = promisify(redisClient.SETNX).bind(redisClient) 
+const { getRedis } = require('../databases/init.redis')
+const { instanceRedis: redisClient } = getRedis() 
 
 class RedisService {
 
@@ -28,8 +25,7 @@ class RedisService {
              * @desc Kiểm tra xem tài nguyên đã bị khóa bởi quy trình khác hay chưa
              * @returns {Boolean}
              */
-            const result = await setnxAsync(key, expireTime)
-            console.log(`result:::${result}`)
+            const result = await redisClient.setNX(key, expireTime)
             
             if(result === 1){
                 // thao tac voi inventory
@@ -40,7 +36,7 @@ class RedisService {
                 // have transaction
                 if(isReversation.modifiedCount){
                     // giai phong key 
-                    await pexpire(key, expireTime)
+                    await redisClient.pExpire(key, expireTime)
                     return key
                 }
 
@@ -52,8 +48,7 @@ class RedisService {
     }
 
     static releaseKey = async (keyLock) => {
-        const delAsyncKey = promisify(redisClient.DEL).bind(redisClient)
-        return await delAsyncKey(keyLock)
+        return await redisClient.del(keyLock)
     }
 }
 

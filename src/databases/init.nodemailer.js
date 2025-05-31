@@ -3,11 +3,11 @@
 const nodemailer = require('nodemailer')
 
 const transport = nodemailer.createTransport({
-    host: '',
-    port: 465,
-    secure: true,
+    service: 'gmail',
     auth: {
-        user: '',
-        pass: ''
+        user: 'nguyenquocbaotu@gmail.com',
+        pass: 'gjai elrj sech puum',
     },
 })
+
+module.exports = transport
